@@ -6,14 +6,14 @@ class URLShortcode:
         self.url = url
         self.shortcode = shortcode
         
-    def url(self):
+    def url(self) -> str:
         return self.url
     
-    def shortcode(self):
+    def shortcode(self) -> str:
         return self.shortcode
     
-    
-def resource_path(relative_path):
+# Get the path of a resource file
+def resource_path(relative_path: str) -> str:
     if hasattr(sys, "_MEIPASS"):
         return os.path.join(sys._MEIPASS, relative_path)
     else:
