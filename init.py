@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 
 config = {
     "title": "URL Shortener",
@@ -19,3 +20,7 @@ def initConfig():
         openfile.write(json.dumps(config, indent="\t"))
         openfile.close()
         
+
+if __name__ == "__main__":
+    from main import window
+    window()

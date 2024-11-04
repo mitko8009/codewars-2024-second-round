@@ -1,3 +1,6 @@
+import sys
+import os
+
 class URLShortcode:
     def __init__(self, url, shortcode):
         self.url = url
@@ -8,6 +11,13 @@ class URLShortcode:
     
     def shortcode(self):
         return self.shortcode
+    
+    
+def resource_path(relative_path):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative_path)
+    else:
+        return os.path.join(os.path.abspath("."), relative_path)
     
 
 if __name__ == "__main__":
