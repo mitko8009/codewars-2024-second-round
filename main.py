@@ -74,7 +74,7 @@ class window(QMainWindow):
         self.mainUi.shorturl_edit.setPlaceholderText("Shortcode")
         self.mainUi.longurl_edit.setText("")
         
-        
+    # Check if the user wants to use custom shortcode
     def isCustomShortCode(self) -> bool:
         return self.mainUi.custom_shortcode.checkState() == 2 and True or False
     
