@@ -19,3 +19,6 @@ REM Move the executable to the root directory
 move .\dist\main.exe .\
 rmdir .\dist /s /q
 rmdir .\build /s /q
+
+echo Build completed successfully.
+pause
