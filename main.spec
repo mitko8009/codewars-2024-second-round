@@ -7,7 +7,8 @@ a = Analysis(
     binaries=[],
     datas=[
         ('assets/icon.png', 'assets'), 
-        ('ui/main.ui', 'ui')
+        ('ui/main.ui', 'ui'),
+        ('ui/settings.ui', 'ui')
     ],
     hiddenimports=[],
     hookspath=[],

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>797</width>
+    <width>765</width>
     <height>600</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
   <widget class="QWidget" name="centralwidget">
    <property name="maximumSize">
     <size>
-     <width>797</width>
+     <width>16777215</width>
      <height>16777215</height>
     </size>
    </property>
@@ -41,6 +41,24 @@
     </property>
     <item row="0" column="0">
      <widget class="QTableWidget" name="DataTable">
+      <property name="minimumSize">
+       <size>
+        <width>200</width>
+        <height>100</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>400</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::ClickFocus</enum>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="frameShape">
        <enum>QFrame::NoFrame</enum>
       </property>
@@ -77,7 +95,7 @@
       </column>
      </widget>
     </item>
-    <item row="0" column="1">
+    <item row="0" column="2">
      <layout class="QGridLayout" name="gridLayout_2">
       <property name="leftMargin">
        <number>4</number>
@@ -91,44 +109,74 @@
       <property name="bottomMargin">
        <number>4</number>
       </property>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="AddButton">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>25</height>
-         </size>
+      <item row="3" column="1">
+       <layout class="QGridLayout" name="g_ShortURL">
+        <property name="leftMargin">
+         <number>7</number>
         </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
+        <property name="topMargin">
+         <number>4</number>
         </property>
-        <property name="text">
-         <string>Add Short URL</string>
+        <property name="rightMargin">
+         <number>10</number>
         </property>
-       </widget>
+        <property name="bottomMargin">
+         <number>6</number>
+        </property>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_shorturl">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Short URL  </string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QLineEdit" name="shorturl_edit">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>22</height>
+           </size>
+          </property>
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="frame">
+           <bool>true</bool>
+          </property>
+          <property name="echoMode">
+           <enum>QLineEdit::Normal</enum>
+          </property>
+          <property name="readOnly">
+           <bool>false</bool>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
-      <item row="5" column="0">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="0">
+      <item row="1" column="1">
        <layout class="QGridLayout" name="g_LongURL">
         <property name="leftMargin">
          <number>10</number>
         </property>
         <property name="topMargin">
-         <number>10</number>
+         <number>4</number>
         </property>
         <property name="rightMargin">
          <number>10</number>
@@ -168,41 +216,92 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="0">
-       <layout class="QGridLayout" name="g_ShortURL">
+      <item row="8" column="1">
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="1">
+       <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="leftMargin">
-         <number>7</number>
+         <number>0</number>
         </property>
         <property name="topMargin">
-         <number>10</number>
+         <number>0</number>
         </property>
         <property name="rightMargin">
          <number>10</number>
         </property>
         <property name="bottomMargin">
-         <number>10</number>
+         <number>0</number>
         </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_shorturl">
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="deleteBtn">
           <property name="font">
            <font>
             <pointsize>9</pointsize>
            </font>
           </property>
           <property name="text">
-           <string>Short URL  </string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           <string>Delete</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
-         <widget class="QLineEdit" name="shorturl_edit">
+        <item>
+         <widget class="QPushButton" name="clearBtn">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Clear</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="5" column="1">
+       <layout class="QGridLayout" name="gridLayout_3">
+        <property name="leftMargin">
+         <number>4</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>10</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="AddButton">
           <property name="minimumSize">
            <size>
             <width>0</width>
-            <height>22</height>
+            <height>25</height>
            </size>
           </property>
           <property name="font">
@@ -210,28 +309,44 @@
             <pointsize>9</pointsize>
            </font>
           </property>
-          <property name="frame">
-           <bool>true</bool>
-          </property>
-          <property name="echoMode">
-           <enum>QLineEdit::Normal</enum>
-          </property>
-          <property name="readOnly">
-           <bool>false</bool>
-          </property>
-          <property name="clearButtonEnabled">
-           <bool>false</bool>
+          <property name="text">
+           <string>Add URL</string>
           </property>
          </widget>
         </item>
+        <item row="1" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QCheckBox" name="custom_shortcode">
+            <property name="font">
+             <font>
+              <pointsize>9</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Custom Short URL</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
        </layout>
-      </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="custom_shortcode">
-        <property name="text">
-         <string>Custom Short URL</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </item>
@@ -242,12 +357,46 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>797</width>
+     <width>765</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionSettings"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionExport_Database">
+   <property name="text">
+    <string>Export Database</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionShutdownRouter">
+   <property name="text">
+    <string>Shutdown Router</string>
+   </property>
+   <property name="toolTip">
+    <string>Shutdown Router</string>
+   </property>
+   <property name="statusTip">
+    <string>WARNING: This button will shutdown the main window with the server</string>
+   </property>
+  </action>
+  <action name="actionStart_Router">
+   <property name="text">
+    <string>Start URL Router</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

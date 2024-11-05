@@ -4,6 +4,7 @@ import json
 config = {
     "title": "URL Shortener",
     "version": "1.0",
+    "flask_port": 5000,
     "min_short_url_length": 3,
 	"max_short_url_length": 20
 }

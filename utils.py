@@ -1,3 +1,4 @@
+import json
 import sys
 import os
 
@@ -18,7 +19,11 @@ def resource_path(relative_path: str) -> str:
         return os.path.join(sys._MEIPASS, relative_path)
     else:
         return os.path.join(os.path.abspath("."), relative_path)
-    
+
+# Save the configuration file
+def saveConfig(config: dict) -> None:
+    with open("./config.json", "w") as f:
+        json.dump(config, f, indent="\t")
 
 if __name__ == "__main__":
     from main import window
