@@ -1,7 +1,16 @@
 {
 	"title": "KURLY",
 	"version": "1.0",
-	"flask_port": 5000,
 	"min_short_url_length": 3,
-	"max_short_url_length": 20
+	"max_short_url_length": 20,
+	"short_url_length": 6,
+	"flask_port": 6969,
+	"flask_debug": true,
+	"default_theme": false,
+	"database": {
+		"db_name": "database",
+		"remote": false,
+		"hostname": "localhost",
+		"port": 27017
+	}
 }

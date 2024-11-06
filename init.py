@@ -4,9 +4,18 @@ import json
 config = {
     "title": "URL Shortener",
     "version": "1.0",
-    "flask_port": 5000,
     "min_short_url_length": 3,
-	"max_short_url_length": 20
+	"max_short_url_length": 20,
+    "short_url_length": 6,
+    "flask_port": 5000,
+    "flask_debug": False,
+    "default_theme": False,
+    "database": {
+		"db_name": "database",
+		"remote": False,
+		"hostname": "localhost",
+		"port": 27017
+	}
 }
 
 def initConfig():

@@ -1,21 +1,18 @@
 from flask import Flask, redirect
-import threading
-import requests
-import sys
 import os
 import signal
 
-from init import *
 import database
+import utils
 
 app = Flask(__name__)
 
-def run_server():
-    app.run(port=5000, use_reloader=False)
+def run_server() -> None:
+    app.run(port=utils.getFromConfig("flask_port"), use_reloader=False, debug=utils.getFromConfig("flask_debug"))
 
 
 @app.route('/<shortcode>')
-def redirect_url(shortcode):
+def redirect_url(shortcode: str) -> str:
     url = database.get_url(shortcode)
     if url is None:
         return "URL not found", 404
@@ -29,7 +26,7 @@ def redirect_url(shortcode):
         return "URL not found"
     
     
-def shutdown_server():
+def shutdown_server() -> None:
     os.kill(os.getpid(), signal.SIGINT)
 
 
