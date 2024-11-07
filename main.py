@@ -35,7 +35,6 @@ class window(QMainWindow):
         # Load theme
         if not config['default_theme']:
             self.loadTheme("ui/theme.qss", app)
-            self.loadTheme("ui/theme.qss", self.settingsUi)
         
         self.functionality()
         
@@ -95,7 +94,6 @@ class window(QMainWindow):
         table.insertRow(rowPosition)
         table.setItem(rowPosition, 0, QTableWidgetItem(shortcode))
         table.setItem(rowPosition, 1, QTableWidgetItem(url))
-        table.setItem(rowPosition, 2, QTableWidgetItem(f"http://localhost:5000/{shortcode}"))
         
         
     def addUrl(self):
@@ -157,8 +155,8 @@ class window(QMainWindow):
     
     def cellClicked(self):
         row = self.mainUi.DataTable.currentRow()
-        shortcode = self.mainUi.DataTable.item(row, 1).text()
-        url = self.mainUi.DataTable.item(row, 0).text()
+        shortcode = self.mainUi.DataTable.item(row, 0).text()
+        url = self.mainUi.DataTable.item(row, 1).text()
         
         if self.mainUi.DataTable.currentColumn() == 3:
             database.delete_url(shortcode)
@@ -235,8 +233,6 @@ class window(QMainWindow):
                 QApplication.instance().setStyleSheet("")
             else:
                 self.loadTheme("ui/theme.qss", QApplication.instance())
-                
-            print(self.settingsUi.exec())
             
     
     def remoteDb(self):
@@ -245,7 +241,7 @@ class window(QMainWindow):
         else:
             self.settingsUi.RemoteGroup.hide()
 
-
+    # Close the application and shutdown the router server
     def closeEvent(self, event):
         router.shutdown_server()  # Shutdown the router server
         event.accept()

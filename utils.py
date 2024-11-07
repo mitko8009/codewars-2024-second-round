@@ -1,3 +1,4 @@
+from init import *
 import json
 import sys
 import os
@@ -32,6 +33,9 @@ def saveConfig(config: dict) -> None:
         
 # Get a value from the configuration file
 def getFromConfig(key: str) -> str:
+    if not os.path.exists("./config.json"):
+        initConfig()
+    
     with open("./config.json", "r") as f:
         return json.load(f)[key]
     
