@@ -1,4 +1,4 @@
-from flask import Flask, redirect
+from flask import Flask, redirect, request
 import os
 import signal
 
@@ -11,7 +11,7 @@ def run_server() -> None:
     app.run(port=utils.getFromConfig("flask_port"), use_reloader=False, debug=utils.getFromConfig("flask_debug"))
 
 # Redirect to URL from shortcode
-@app.route('/<shortcode>')
+@app.route('/<shortcode>', methods=['GET', 'POST'])
 def redirect_url(shortcode: str) -> str:
     try:
         url = database.get_url(shortcode)
@@ -23,20 +23,26 @@ def redirect_url(shortcode: str) -> str:
         if metadata['expires'] < utils.getTimestamp():
             database.delete_url(shortcode)
             return "URL not found", 404
-        
-    if metadata['password'] is not None:
-        return '''
-        <html>
-            <body>
-            <form action="/{shortcode}" method="post">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password">
-                <input type="submit" value="Submit">
-            </form>
-            </body>
-        </html>
-        '''.format(shortcode=shortcode)
     
+    # If password is set, prompt for password
+    if metadata['password'] is not None:
+        if request.method == 'POST':
+            password = request.form.get('password')
+            if password == metadata['password']:
+                return redirectUrl(url)
+            else:
+                return "Incorrect password", 403
+        return utils.getFileContents(utils.resource_path("./static/password.html")).format(
+            shortcode=shortcode,
+            app_title=utils.getFromConfig("title"),
+            css=utils.getFileContents(utils.resource_path("./static/style.css")),
+            js=utils.getFileContents(utils.resource_path("./static/script.js")),
+        )
+        
+    redirectUrl(url)
+    
+
+def redirectUrl(url: str) -> str:
     if url is None:
         return "URL not found", 404
     
@@ -46,7 +52,7 @@ def redirect_url(shortcode: str) -> str:
     try:
         return redirect(url)
     except:
-        return "URL not found"
+        return "URL not found", 404
 
     
     

@@ -52,6 +52,11 @@ def getTimestamp() -> int:
 # Clear the console
 def clearConsole() -> None:
     os.system("cls" if os.name == "nt" else "clear")
+    
+# Get a file's contents
+def getFileContents(file: str) -> str:
+    with open(file, "r") as f:
+        return f.read()
 
 if __name__ == "__main__":
     from main import main

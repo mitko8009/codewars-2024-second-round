@@ -1,0 +1,58 @@
+body {
+    background-color: #333333;
+    font-family: Arial, sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+}
+
+div {
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+p, label {
+    font-size: 1.5em;
+}
+
+label {
+    font-weight: bold;
+}
+
+input {
+    font-size: 1em;
+    padding: 8px 6px;
+    margin: 5px;
+    background-color: #555;
+    border: none;
+    color: white;
+    border-radius: 4px;
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px 40px;
+    font-size: 1.5rem;
+}
+
+form button {
+    background-color: #007bff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 8px 20px;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    font-size: 1em;
+}
