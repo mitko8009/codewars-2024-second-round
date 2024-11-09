@@ -1,5 +1,6 @@
 import sqlite3
 import uuid
+import time
 
 import utils
 
@@ -78,7 +79,7 @@ def purgeAllData() -> None:
     cursor.execute(database_base)
     conn.commit()
     
-
+# Append metadata
 def appendMetadata(shortcode: str, key: str, value: str) -> None:
     cursor.execute('SELECT metadata FROM urls WHERE shortcode = ?', (shortcode,))
     metadata = cursor.fetchone()[0]
@@ -89,6 +90,36 @@ def appendMetadata(shortcode: str, key: str, value: str) -> None:
     metadata[key] = value
     cursor.execute('UPDATE urls SET metadata = ? WHERE shortcode = ?', (str(metadata), shortcode))
     conn.commit()
+    
+# Get metadata
+def getMetadata(shortcode: str) -> dict:
+    cursor.execute('SELECT metadata FROM urls WHERE shortcode = ?', (shortcode,))
+    metadata = cursor.fetchone()[0]
+    return eval(metadata) if metadata is not None else {}
+
+# Remove metadata
+def removeMetadata(shortcode: str, key: str) -> None:
+    cursor.execute('SELECT metadata FROM urls WHERE shortcode = ?', (shortcode,))
+    metadata = cursor.fetchone()[0]
+    if metadata is None or metadata == 'None':
+        return
+    metadata = eval(metadata)
+    if key in metadata:
+        metadata.pop(key)
+        cursor.execute('UPDATE urls SET metadata = ? WHERE shortcode = ?', (str(metadata), shortcode))
+        conn.commit()
+        
+# Update metadata
+def updateMetadata(shortcode: str, key: str, value: str) -> None:
+    cursor.execute('SELECT metadata FROM urls WHERE shortcode = ?', (shortcode,))
+    metadata = cursor.fetchone()[0]
+    if metadata is None or metadata == 'None':
+        return
+    metadata = eval(metadata)
+    if key in metadata:
+        metadata[key] = value
+        cursor.execute('UPDATE urls SET metadata = ? WHERE shortcode = ?', (str(metadata), shortcode))
+        conn.commit()
 
 
 # Test the database functions    
@@ -99,11 +130,10 @@ if __name__ == '__main__':
         print(i)
         insert_url(f'https://example.com/{i}', f'{i}{i}{i}')
     
-    appendMetadata('000', 'locked', 'true')
-    appendMetadata('000', 'password', 'hunter2')
+    appendMetadata('000', 'expires', time.time() + 60) # 60 seconds from now
     print(get_all_urls()[0].url)
     print(get_all_urls()[0].shortcode)
-    print(eval(get_all_urls()[0].metadata)['locked'])
+    print(eval(get_all_urls()[0].metadata)['expires'])
     # print(eval(get_all_urls()[0].metadata))
-    from main import window
-    window()
+    from main import main
+    main()

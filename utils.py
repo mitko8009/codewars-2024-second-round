@@ -1,5 +1,7 @@
+from PyQt5.QtWidgets import QWidget
 from init import *
 import json
+import time
 import sys
 import os
 
@@ -39,13 +41,18 @@ def getFromConfig(key: str) -> str:
     with open("./config.json", "r") as f:
         return json.load(f)[key]
     
-# Toggle all elements in a layout
-def toggleAllElementFromLayout(layout, state):
-    for i in range(layout.count()):
-        widget = layout.itemAt(i).widget()
-        if widget:
-            widget.setVisible(state)
+# Toggle the visibility of a widget
+def toggleVisibility(widget: QWidget) -> None:
+    widget.setVisible(not widget.isVisible())
+            
+# Get the current timestamp
+def getTimestamp() -> int:
+    return int(time.time())
+
+# Clear the console
+def clearConsole() -> None:
+    os.system("cls" if os.name == "nt" else "clear")
 
 if __name__ == "__main__":
-    from main import window
-    window()
+    from main import main
+    main()

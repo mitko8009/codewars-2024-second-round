@@ -33,5 +33,5 @@ def initConfig():
         
 
 if __name__ == "__main__":
-    from main import window
-    window()
+    from main import main
+    main()

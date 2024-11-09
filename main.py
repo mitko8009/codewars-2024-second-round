@@ -1,9 +1,10 @@
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtGui import QIcon
 import threading
 import pyperclip
+import time
 import sys
 
 from init import *
@@ -59,17 +60,27 @@ class window(QMainWindow):
         self.mainUi.shorturl_edit.setReadOnly(True)
         self.mainUi.custom_shortcode.clicked.connect(self.customShortcode)
         
+        # Set time and date
+        self.mainUi.expireDate.setDate(QDate.currentDate())
+        self.mainUi.expireDate.setDateTime(QDateTime.currentDateTime().addSecs(1800))
+        self.mainUi.expireDate.setMinimumDate(QDate.currentDate())
+        
+        
         # Button actions
         self.mainUi.AddButton.clicked.connect(self.addUrl)
         self.mainUi.clearBtn.clicked.connect(self.clearfields)
         self.mainUi.deleteBtn.hide()
         self.mainUi.deleteBtn.clicked.connect(self.deleteSelectedUrl)
-        utils.toggleAllElementFromLayout(self.mainUi.passwordLayout, False)
-        self.mainUi.passwordBtn.clicked.connect(self.password)
-        utils.toggleAllElementFromLayout(self.mainUi.usesLimitLayout, False)
-        self.mainUi.usesLimitBtn.clicked.connect(self.usesLimit)
         self.mainUi.copyLongURL.clicked.connect(lambda: pyperclip.copy(self.mainUi.longurl_edit.text()))
         self.mainUi.copyShortURL.clicked.connect(lambda: pyperclip.copy(len(self.mainUi.shorturl_edit.text()) > 0 and  f"localhost:{config['flask_port']}/{self.mainUi.shorturl_edit.text()}" or ""))
+        self.mainUi.AdvancedSettingsBox.hide()
+        self.mainUi.AdvancedSettings.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.AdvancedSettingsBox))
+        self.mainUi.expireDate.hide()
+        self.mainUi.expireDateBtn.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.expireDate))
+        self.mainUi.passwordBox.hide()
+        self.mainUi.passwordBtn.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.passwordBox))
+        self.mainUi.maxUses.hide()
+        self.mainUi.limitURLUsesBtn.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.maxUses))
         
         # Table actions
         self.mainUi.DataTable.cellClicked.connect(self.cellClicked)
@@ -84,8 +95,8 @@ class window(QMainWindow):
         #### Settings dialog
         self.settingsUi.label_settings.setText(f"{config['title']} Settings")
         self.settingsUi.RemoteGroup.hide()
-        self.settingsUi.remoteDb.clicked.connect(self.remoteDb)
-        self.settingsUi.purgeBtn.clicked.connect(database.purgeAllData)
+        self.settingsUi.remoteDb.clicked.connect(lambda: utils.toggleVisibility(self.settingsUi.RemoteGroup)) 
+        self.settingsUi.purgeBtn.clicked.connect(self.purgeDatabase)
         
     
     def addUrlToTable(self, url, shortcode):
@@ -119,17 +130,28 @@ class window(QMainWindow):
             self.mainUi.shorturl_edit.setPlaceholderText(f"Shortcode must be at most {config['max_short_url_length']} characters long")
             return
         
+        # Check if the password is valid
+        if self.mainUi.passwordBox.text() != "" and self.passwordBtn.isChecked():
+            password = self.mainUi.passwordBox.text()
+            if "'" in password or '"' in password:
+                self.mainUi.passwordBox.setPlaceholderText("Invalid password")
+                return
+        else:
+            password = None
+            
+        # Database
         database.insert_url(url, shortcode)
+        database.appendMetadata(shortcode, "password", password)
+        
         self.addUrlToTable(url, shortcode)
-        self.mainUi.shorturl_edit.setPlaceholderText("Shortcode")
-        self.mainUi.longurl_edit.setText("")
+        self.clearfields()
         
     
     def updateUrl(self):
         url = self.mainUi.longurl_edit.text()
         shortcode = self.mainUi.shorturl_edit.text()
-        self.deleteSelectedUrl()
         database.update_url(shortcode, url)
+        self.deleteSelectedUrl()
         self.clearfields()
         self.addUrlToTable(url, shortcode)
         
@@ -143,6 +165,9 @@ class window(QMainWindow):
         self.mainUi.AddButton.disconnect()
         self.mainUi.AddButton.clicked.connect(self.addUrl)
         self.mainUi.deleteBtn.hide()
+        self.mainUi.passwordBox.setPlaceholderText("Password")
+        self.mainUi.passwordBox.setText("")
+        self.mainUi.passwordBox.setReadOnly(False)
         
     # Check if the user wants to use custom shortcode
     def isCustomShortCode(self) -> bool:
@@ -152,7 +177,7 @@ class window(QMainWindow):
     def customShortcode(self):
         self.mainUi.shorturl_edit.setReadOnly(not self.isCustomShortCode())
         
-    
+    # When a cell is clicked in the table
     def cellClicked(self):
         row = self.mainUi.DataTable.currentRow()
         shortcode = self.mainUi.DataTable.item(row, 0).text()
@@ -172,29 +197,17 @@ class window(QMainWindow):
             self.mainUi.AddButton.setText("Update URL")
             self.mainUi.AddButton.disconnect()
             self.mainUi.AddButton.clicked.connect(self.updateUrl)
+            self.mainUi.passwordBox.setReadOnly(True)
+            self.mainUi.passwordBox.setPlaceholderText("You can't change the password")
+            self.mainUi.passwordBox.setText("")
             
     
-    def deleteSelectedUrl(self):
-        self.clearfields()
+    def deleteSelectedUrl(self): ######################################################## POSIBLE ERROR ##############################                                                                                                  
         row = self.mainUi.DataTable.currentRow()
         shortcode = self.mainUi.DataTable.item(row, 1).text()
         database.delete_url(shortcode)
+        self.clearfields()
         self.mainUi.DataTable.removeRow(row)
-        
-    
-    def usesLimit(self):
-        if self.mainUi.usesLimitBtn.isChecked():
-            utils.toggleAllElementFromLayout(self.mainUi.usesLimitLayout, True)
-        else:
-            utils.toggleAllElementFromLayout(self.mainUi.usesLimitLayout, False)
-        
-        
-    def password(self):
-        if self.mainUi.passwordBtn.isChecked():
-            utils.toggleAllElementFromLayout(self.mainUi.passwordLayout, True)
-        else:
-            utils.toggleAllElementFromLayout(self.mainUi.passwordLayout, False)
-        
         
     # Open settings dialog
     def settings(self):
@@ -233,19 +246,26 @@ class window(QMainWindow):
                 QApplication.instance().setStyleSheet("")
             else:
                 self.loadTheme("ui/theme.qss", QApplication.instance())
-            
+                
     
-    def remoteDb(self):
-        if self.settingsUi.remoteDb.isChecked():
-            self.settingsUi.RemoteGroup.show()
-        else:
-            self.settingsUi.RemoteGroup.hide()
+    def purgeDatabase(self):
+        database.purgeAllData()
+        self.mainUi.DataTable.setRowCount(0)
+        self.clearfields()
 
     # Close the application and shutdown the router server
     def closeEvent(self, event):
         router.shutdown_server()  # Shutdown the router server
         event.accept()
 
+def main():
+    utils.clearConsole()
+    try:
+        window()
+    except Exception as e:
+        print("\n\n\nERROR CODE:\n"+str(e)+"\n\n\n")
+        router.shutdown_server()
+
 if __name__ == "__main__":
-    window()
+    main()
     
