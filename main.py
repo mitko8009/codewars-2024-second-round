@@ -52,11 +52,7 @@ class window(QMainWindow):
 
      
     def functionality(self):
-        # Load data from database
-        data = database.get_all_urls()
-        for i in data:
-            self.addUrlToTable(i.url, i.shortcode)
-        
+        self.refreshTable()
         self.mainUi.shorturl_edit.setReadOnly(True)
         self.mainUi.custom_shortcode.clicked.connect(self.customShortcode)
         
@@ -81,6 +77,7 @@ class window(QMainWindow):
         self.mainUi.passwordBtn.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.passwordBox))
         self.mainUi.maxUses.hide()
         self.mainUi.limitURLUsesBtn.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.maxUses))
+        self.mainUi.refreshBtn.clicked.connect(self.refreshTable)
         
         # Table actions
         self.mainUi.DataTable.cellClicked.connect(self.cellClicked)
@@ -139,9 +136,16 @@ class window(QMainWindow):
         else:
             password = None
             
+        if self.mainUi.expireDateBtn.isChecked():
+            expireDate = self.mainUi.expireDate.dateTime().toSecsSinceEpoch()
+        else:
+            expireDate = None
+            
+                        
         # Database
         database.insert_url(url, shortcode)
         database.appendMetadata(shortcode, "password", password)
+        database.appendMetadata(shortcode, "expires", expireDate)
         
         self.addUrlToTable(url, shortcode)
         self.clearfields()
@@ -202,12 +206,22 @@ class window(QMainWindow):
             self.mainUi.passwordBox.setText("")
             
     
-    def deleteSelectedUrl(self): ######################################################## POSIBLE ERROR ##############################                                                                                                  
+    def deleteSelectedUrl(self):                                                                                                
         row = self.mainUi.DataTable.currentRow()
-        shortcode = self.mainUi.DataTable.item(row, 1).text()
+        shortcode = self.mainUi.DataTable.item(row, 0).text()
         database.delete_url(shortcode)
         self.clearfields()
         self.mainUi.DataTable.removeRow(row)
+        
+    
+    def refreshTable(self):
+        self.mainUi.DataTable.setRowCount(0)
+        self.clearfields()
+        
+        # Load data from database
+        data = database.get_all_urls()
+        for i in data:
+            self.addUrlToTable(i.url, i.shortcode)
         
     # Open settings dialog
     def settings(self):
@@ -250,8 +264,7 @@ class window(QMainWindow):
     
     def purgeDatabase(self):
         database.purgeAllData()
-        self.mainUi.DataTable.setRowCount(0)
-        self.clearfields()
+        self.refreshTable()
 
     # Close the application and shutdown the router server
     def closeEvent(self, event):

@@ -472,6 +472,18 @@
          <number>0</number>
         </property>
         <item>
+         <widget class="QPushButton" name="refreshBtn">
+          <property name="font">
+           <font>
+            <pointsize>9</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Refresh Table</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
@@ -591,6 +603,13 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="usesLeft">
+              <property name="text">
+               <string>{0} uses left for this URL</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -716,7 +735,6 @@
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionSettings">
    <property name="text">
     <string>Settings</string>

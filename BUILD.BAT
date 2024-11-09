@@ -2,17 +2,15 @@
 REM Comentari za hris4o i didko :D
 REM posle da nqma ama ti ne si pisal komentari
 
-REM Check if PyInstaller is installed
-pyinstaller --version >nul 2>&1
-
-IF ERRORLEVEL 1 (
-    echo PyInstaller not found. Installing PyInstaller...
-    pip install pyinstaller
-) ELSE (
-    echo PyInstaller is already installed.
-)
+REM Check if Python Dependencies are installed
+echo Checking Python Dependencies...
+pip install -r requirements.txt
+pip install PyQt5
+pip install pyinstaller
+@REM cls
 
 REM BUILD the application
+echo Building the application...
 pyinstaller main.spec
 
 REM Move the executable to the root directory

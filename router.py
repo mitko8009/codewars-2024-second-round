@@ -13,13 +13,16 @@ def run_server() -> None:
 # Redirect to URL from shortcode
 @app.route('/<shortcode>')
 def redirect_url(shortcode: str) -> str:
-    url = database.get_url(shortcode)
-    metadata = database.getMetadata(shortcode)
+    try:
+        url = database.get_url(shortcode)
+        metadata = database.getMetadata(shortcode)
+    except:
+        return "URL not found", 404
     
-    # if metadata['expires'] is not None:
-    #     if metadata['expires'] < utils.getTimestamp():
-    #         database.delete_url(shortcode)
-    #         return "URL not found", 404
+    if "expires" in metadata.keys() and metadata['expires'] is not None:
+        if metadata['expires'] < utils.getTimestamp():
+            database.delete_url(shortcode)
+            return "URL not found", 404
         
     if metadata['password'] is not None:
         return '''
