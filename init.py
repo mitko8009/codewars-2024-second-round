@@ -6,6 +6,7 @@ config = {
     "version": "1.0",
     "min_short_url_length": 3,
 	"max_short_url_length": 20,
+    "rename_password_protected_urls": True,
     "short_url_length": 6,
     "flask_port": 5000,
     "flask_debug": False,

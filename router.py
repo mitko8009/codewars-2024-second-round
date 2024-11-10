@@ -12,24 +12,40 @@ def run_server() -> None:
 
 # Redirect to URL from shortcode
 @app.route('/<shortcode>', methods=['GET', 'POST'])
-def redirect_url(shortcode: str) -> str:
+def URLRoute(shortcode: str) -> str:
     try:
         url = database.get_url(shortcode)
         metadata = database.getMetadata(shortcode)
     except:
         return "URL not found", 404
     
-    if "expires" in metadata.keys() and metadata['expires'] is not None:
-        if metadata['expires'] < utils.getTimestamp():
-            database.delete_url(shortcode)
-            return "URL not found", 404
+    # If URL is expired, return error page
+    if "expires" in metadata.keys():
+        if metadata['expires'] is not None:
+            if metadata['expires'] < utils.getTimestamp():
+                database.delete_url(shortcode)
+                return utils.getFileContents(utils.resource_path("./static/error.html")).format(
+                    app_title=utils.getFromConfig("title"),
+                    css=utils.getFileContents(utils.resource_path("./static/style.css")),
+                    title="Expired URL",
+                    content="This URL has expired and is no longer available."
+                )
+
+                    
+    if metadata['uses'] is not None and metadata['uses'] <= metadata['maxUses']:
+        return utils.getFileContents(utils.resource_path("./static/error.html")).format(
+            app_title=utils.getFromConfig("title"),
+            css=utils.getFileContents(utils.resource_path("./static/style.css")),
+            title="Max Uses Reached",
+            content="This URL has reached the maximum number of uses."
+        ), 403
     
     # If password is set, prompt for password
     if metadata['password'] is not None:
         if request.method == 'POST':
-            password = request.form.get('password')
+            password = utils.hashPassword(request.form.get('password'))
             if password == metadata['password']:
-                return redirectUrl(url)
+                return redirect(url)
             else:
                 return "Incorrect password", 403
         return utils.getFileContents(utils.resource_path("./static/password.html")).format(
@@ -37,25 +53,31 @@ def redirect_url(shortcode: str) -> str:
             app_title=utils.getFromConfig("title"),
             css=utils.getFileContents(utils.resource_path("./static/style.css")),
             js=utils.getFileContents(utils.resource_path("./static/script.js")),
-        )
+        ), 200
         
-    redirectUrl(url)
+    
+    if metadata['uses'] is not None:
+        metadata['uses'] += 1
+    
+    database.updateMetadata(shortcode, "uses", metadata['uses'])
+        
+    return redirect(url), 302
     
 
-def redirectUrl(url: str) -> str:
+def redirect(url: str) -> str:
     if url is None:
         return "URL not found", 404
     
     if not url.startswith("http"):
-        url = "http://" + url
-            
+        url = "https://" + url
+        
+    # return redirect(url)
     try:
         return redirect(url)
     except:
         return "URL not found", 404
 
-    
-    
+
 def shutdown_server() -> None:
     os.kill(os.getpid(), signal.SIGINT)
 

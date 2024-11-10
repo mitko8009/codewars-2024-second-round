@@ -36,6 +36,7 @@ a = Analysis(
         ('static/style.css', 'static'),
         ('static/script.js', 'static'),
         ('static/password.html', 'static'),
+        ('static/error.html', 'static'),
     ],
     hiddenimports=[],
     hookspath=[],

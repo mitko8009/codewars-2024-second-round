@@ -1,9 +1,12 @@
 from PyQt5.QtWidgets import QWidget
-from init import *
+import webbrowser
+import hashlib
 import json
 import time
 import sys
 import os
+
+from init import *
 
 # URLShortcode class to store URL, shortcode and metadata
 class URLShortcode:
@@ -57,6 +60,20 @@ def clearConsole() -> None:
 def getFileContents(file: str) -> str:
     with open(file, "r") as f:
         return f.read()
+
+# Hash a password
+def hashPassword(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
+# Open a URL in the default web browser
+def openInWeb(url: str) -> None:
+    if url is None:
+        return
+    
+    if not url.startswith("http"):
+        url = "https://" + url
+        
+    webbrowser.open(url)
 
 if __name__ == "__main__":
     from main import main

@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 import threading
 import pyperclip
+import urllib
 import time
 import sys
 
@@ -78,6 +79,8 @@ class window(QMainWindow):
         self.mainUi.maxUses.hide()
         self.mainUi.limitURLUsesBtn.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.maxUses))
         self.mainUi.refreshBtn.clicked.connect(self.refreshTable)
+        self.mainUi.openInWeb.hide()
+        self.mainUi.openInWeb.clicked.connect(lambda: utils.openInWeb(self.mainUi.longurl_edit.text()))
         
         # Table actions
         self.mainUi.DataTable.cellClicked.connect(self.cellClicked)
@@ -86,7 +89,8 @@ class window(QMainWindow):
         self.mainUi.actionSettings.triggered.connect(self.settings)
         self.mainUi.actionNew_URL.triggered.connect(self.clearfields)
         self.mainUi.actionQuit.triggered.connect(self.close)
-        
+        self.mainUi.actionRefresh_Table.triggered.connect(self.refreshTable)
+        self.mainUi.actionClear_Fields.triggered.connect(self.clearfields)
         
         
         #### Settings dialog
@@ -129,23 +133,31 @@ class window(QMainWindow):
         
         # Check if the password is valid
         if self.mainUi.passwordBox.text() != "" and self.passwordBtn.isChecked():
-            password = self.mainUi.passwordBox.text()
+            password = utils.hashPassword(self.mainUi.passwordBox.text())
             if "'" in password or '"' in password:
                 self.mainUi.passwordBox.setPlaceholderText("Invalid password")
                 return
         else:
             password = None
-            
+
+        # Add exparation date if the user wants to        
         if self.mainUi.expireDateBtn.isChecked():
             expireDate = self.mainUi.expireDate.dateTime().toSecsSinceEpoch()
         else:
             expireDate = None
+            
+        # Add max uses if the user wants to
+        if self.mainUi.maxUses.value() > 0 and self.mainUi.limitURLUsesBtn.isChecked():
+            uses = self.mainUi.maxUses.value()
+        else:
+            uses = None
             
                         
         # Database
         database.insert_url(url, shortcode)
         database.appendMetadata(shortcode, "password", password)
         database.appendMetadata(shortcode, "expires", expireDate)
+        database.appendMetadata(shortcode, "maxUses", uses)
         
         self.addUrlToTable(url, shortcode)
         self.clearfields()
@@ -172,6 +184,7 @@ class window(QMainWindow):
         self.mainUi.passwordBox.setPlaceholderText("Password")
         self.mainUi.passwordBox.setText("")
         self.mainUi.passwordBox.setReadOnly(False)
+        self.mainUi.openInWeb.hide()
         
     # Check if the user wants to use custom shortcode
     def isCustomShortCode(self) -> bool:
@@ -204,6 +217,7 @@ class window(QMainWindow):
             self.mainUi.passwordBox.setReadOnly(True)
             self.mainUi.passwordBox.setPlaceholderText("You can't change the password")
             self.mainUi.passwordBox.setText("")
+            self.mainUi.openInWeb.show()
             
     
     def deleteSelectedUrl(self):                                                                                                
@@ -221,7 +235,13 @@ class window(QMainWindow):
         # Load data from database
         data = database.get_all_urls()
         for i in data:
-            self.addUrlToTable(i.url, i.shortcode)
+            url = i.url
+            metadata = eval(i.metadata)
+            
+            if metadata['password'] is not None and config['rename_password_protected_urls']:
+                url = "Password protected URL"
+            
+            self.addUrlToTable(url, i.shortcode)
         
     # Open settings dialog
     def settings(self):
@@ -229,6 +249,7 @@ class window(QMainWindow):
         ## General
         self.settingsUi.max_short_url_length.setValue(config['max_short_url_length'])
         self.settingsUi.short_url_length.setValue(config['short_url_length'])
+        self.settingsUi.renamepasswdurls.setChecked(config['rename_password_protected_urls'])
         ## Appearance
         self.settingsUi.defaultTheme.setChecked(config['default_theme'])
         ## Database
@@ -246,6 +267,7 @@ class window(QMainWindow):
             # Save values to config
             config['max_short_url_length'] = self.settingsUi.max_short_url_length.value()
             config['short_url_length'] = self.settingsUi.short_url_length.value()
+            config['rename_password_protected_urls'] = self.settingsUi.renamepasswdurls.isChecked()
             config['default_theme'] = self.settingsUi.defaultTheme.isChecked()
             config['database']['db_name'] = self.settingsUi.DatabaseName.text()
             config['database']['remote'] = self.settingsUi.remoteDb.isChecked()
@@ -260,6 +282,9 @@ class window(QMainWindow):
                 QApplication.instance().setStyleSheet("")
             else:
                 self.loadTheme("ui/theme.qss", QApplication.instance())
+                
+            # Update table
+            self.refreshTable()
                 
     
     def purgeDatabase(self):
