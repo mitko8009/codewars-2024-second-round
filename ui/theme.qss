@@ -129,11 +129,11 @@ QListWidget::item {
   
   /* Left Pane & File Trees #QTreeView, #QListView*/
   QTreeView::branch:closed:has-children {
-    image: url(./assets/branch-closed.png);
+    image: url(assets/branch-closed.png);
   }
   
   QTreeView::branch:open:has-children {
-    image: url(./assets/branch-open.png);
+    image: url(assets/branch-open.png);
   }
   
   QListView::item {
@@ -221,7 +221,7 @@ QListWidget::item {
   }
   
   QComboBox::down-arrow {
-    image: url(./assets/combobox-down.png);
+    image: url(assets/combobox-down.png);
   }
   
   QComboBox QAbstractItemView {
@@ -263,7 +263,7 @@ QListWidget::item {
   }
   
   QToolButton::menu-indicator {
-    image: url(./assets/combobox-down.png);
+    image: url(assets/combobox-down.png);
     subcontrol-origin: padding;
     subcontrol-position: center right;
     padding-top: 10%;
@@ -326,7 +326,7 @@ QListWidget::item {
   }
   
   QPushButton::menu-indicator {
-    image: url(./assets/combobox-down.png);
+    image: url(assets/combobox-down.png);
     subcontrol-origin: padding;
     subcontrol-position: center right;
     padding-right: 5%;
@@ -399,13 +399,13 @@ QListWidget::item {
   QGroupBox::indicator:checked,
   QTreeView::indicator:checked,
   QCheckBox::indicator:checked {
-    image: url(./assets/checkbox-check.png);
+    image: url(assets/checkbox-check.png);
   }
   
   QGroupBox::indicator:disabled,
   QTreeView::indicator:checked:disabled,
   QCheckBox::indicator:checked:disabled {
-    image: url(./assets/checkbox-check-disabled.png);
+    image: url(assets/checkbox-check-disabled.png);
   }
   
   /* Check boxes special */
@@ -447,7 +447,7 @@ QListWidget::item {
   }
   
   QAbstractSpinBox::up-arrow {
-    image: url(./assets/spinner-up.png);
+    image: url(assets/spinner-up.png);
   }
   
   QAbstractSpinBox::down-button {
@@ -455,7 +455,7 @@ QListWidget::item {
   }
   
   QAbstractSpinBox::down-arrow {
-    image: url(./assets/spinner-down.png);
+    image: url(assets/spinner-down.png);
   }
   
   /* Sliders #QSlider */
@@ -569,51 +569,51 @@ QListWidget::item {
   }
   
   QScrollBar::up-arrow:vertical {
-    image: url(./assets/scrollbar-up.png);
+    image: url(assets/scrollbar-up.png);
   }
   
   QScrollBar::up-arrow:vertical:hover {
-    image: url(./assets/scrollbar-up-hover.png);
+    image: url(assets/scrollbar-up-hover.png);
   }
   
   QScrollBar::up-arrow:vertical:disabled {
-    image: url(./assets/scrollbar-up-disabled.png);
+    image: url(assets/scrollbar-up-disabled.png);
   }
   
   QScrollBar::right-arrow:horizontal {
-    image: url(./assets/scrollbar-right.png);
+    image: url(assets/scrollbar-right.png);
   }
   
   QScrollBar::right-arrow:horizontal:hover {
-    image: url(./assets/scrollbar-right-hover.png);
+    image: url(assets/scrollbar-right-hover.png);
   }
   
   QScrollBar::right-arrow:horizontal:disabled {
-    image: url(./assets/scrollbar-right-disabled.png);
+    image: url(assets/scrollbar-right-disabled.png);
   }
   
   QScrollBar::down-arrow:vertical {
-    image: url(./assets/scrollbar-down.png);
+    image: url(assets/scrollbar-down.png);
   }
   
   QScrollBar::down-arrow:vertical:hover {
-    image: url(./assets/scrollbar-down-hover.png);
+    image: url(assets/scrollbar-down-hover.png);
   }
   
   QScrollBar::down-arrow:vertical:disabled {
-    image: url(./assets/scrollbar-down-disabled.png);
+    image: url(assets/scrollbar-down-disabled.png);
   }
   
   QScrollBar::left-arrow:horizontal {
-    image: url(./assets/scrollbar-left.png);
+    image: url(assets/scrollbar-left.png);
   }
   
   QScrollBar::left-arrow:horizontal:hover {
-    image: url(./assets/scrollbar-left-hover.png);
+    image: url(assets/scrollbar-left-hover.png);
   }
   
   QScrollBar::left-arrow:horizontal:disabled {
-    image: url(./assets/scrollbar-left-disabled.png);
+    image: url(assets/scrollbar-left-disabled.png);
   }
   
   /* Header Rows and Tables (Configure Mod Categories) #QTableView, #QHeaderView */
@@ -652,7 +652,7 @@ QListWidget::item {
   }
   
   QHeaderView::up-arrow {
-    image: url(./assets/sort-asc.png);
+    image: url(assets/sort-asc.png);
     margin-bottom: -37px;
   }
   
@@ -661,7 +661,7 @@ QListWidget::item {
   }
   
   QHeaderView::down-arrow {
-    image: url(./assets/sort-desc.png);
+    image: url(assets/sort-desc.png);
     margin-bottom: 0;
   }
   
@@ -699,7 +699,7 @@ QListWidget::item {
   }
   
   QMenu::right-arrow {
-    image: url(./assets/sub-menu-arrow.png);
+    image: url(assets/sub-menu-arrow.png);
     subcontrol-origin: padding;
     subcontrol-position: center right;
     padding-right: 0.5em;
@@ -819,19 +819,19 @@ QListWidget::item {
   }
   
   QTabBar QToolButton::right-arrow {
-    image: url(./assets/scrollbar-right.png);
+    image: url(assets/scrollbar-right.png);
   }
   
   QTabBar QToolButton::right-arrow:hover {
-    image: url(./assets/scrollbar-right-hover.png);
+    image: url(assets/scrollbar-right-hover.png);
   }
   
   QTabBar QToolButton::left-arrow {
-    image: url(./assets/scrollbar-left.png);
+    image: url(assets/scrollbar-left.png);
   }
   
   QTabBar QToolButton::left-arrow:hover {
-    image: url(./assets/scrollbar-left-hover.png);
+    image: url(assets/scrollbar-left-hover.png);
   }
   
   /* Special styles */
@@ -876,11 +876,11 @@ QListWidget::item {
   }
   
   QTreeWidget#categoriesList::item:has-children {
-    background-image: url(./assets/branch-closed.png);
+    background-image: url(assets/branch-closed.png);
   }
   
   QTreeWidget#categoriesList::item:has-children:open {
-    background-image: url(./assets/branch-open.png);
+    background-image: url(assets/branch-open.png);
   }
   
   QDialog#QueryOverwriteDialog QPushButton {

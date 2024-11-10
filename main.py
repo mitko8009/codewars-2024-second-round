@@ -41,7 +41,7 @@ class window(QMainWindow):
         self.mainUi.show()
         sys.exit(app.exec_())
        
-        
+    # Load the theme
     def loadTheme(self, file, app):
         theme = QFile(utils.resource_path(file))
         if theme.open(QFile.ReadOnly | QFile.Text):
@@ -49,7 +49,7 @@ class window(QMainWindow):
             app.setStyleSheet(str(qss, encoding='utf-8'))
             theme.close()
 
-     
+    # Functionality of the application
     def functionality(self):
         self.refreshTable()
         self.mainUi.shorturl_edit.setReadOnly(True)
@@ -106,7 +106,7 @@ class window(QMainWindow):
         table.setItem(rowPosition, 0, QTableWidgetItem(shortcode))
         table.setItem(rowPosition, 1, QTableWidgetItem(url))
         
-        
+    # Add a new URL to the database
     def addUrl(self):
         url = self.mainUi.longurl_edit.text()
         if not url:
@@ -257,6 +257,10 @@ class window(QMainWindow):
     
     def checkURL(self):
         search_text = self.mainUi.urlcheckEdit.text()
+        
+        if "/" in search_text:
+            search_text = search_text.split("/")[-1]
+        
         table = self.mainUi.DataTable
         for row in range(table.rowCount()):
             item = table.item(row, 0)  # Assuming the short URL is in the first column
@@ -264,6 +268,7 @@ class window(QMainWindow):
                 table.selectRow(row)
                 self.cellClicked()
                 return
+            
         QMessageBox.information(self, "Search Result", "Short URL not found.")
         
     # Open settings dialog

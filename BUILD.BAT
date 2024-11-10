@@ -7,7 +7,6 @@ echo Checking Python Dependencies...
 pip install -r requirements.txt
 pip install PyQt5
 pip install pyinstaller
-@REM cls
 
 REM BUILD the application
 echo Building the application...

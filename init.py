@@ -20,6 +20,7 @@ config = {
 	}
 }
 
+# Initialize the config file
 def initConfig():
     if os.path.exists("./config.json"):
         d = json.loads(open("./config.json").read())
