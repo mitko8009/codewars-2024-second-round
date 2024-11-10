@@ -6,7 +6,7 @@
 ## ⭐ Features ⭐
 
 - Shortening url locally/remotly
-- Password protect, expire data, limit url uses, etc.
+- Password protect, expire date, limit url uses, etc.
 - Custom ShortCodes
 - Customizable preferences
 
