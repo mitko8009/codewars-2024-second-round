@@ -1,6 +1,5 @@
 import sqlite3
 import uuid
-import time
 
 import utils
 
@@ -120,20 +119,19 @@ def updateMetadata(shortcode: str, key: str, value: str) -> None:
         metadata[key] = value
         cursor.execute('UPDATE urls SET metadata = ? WHERE shortcode = ?', (str(metadata), shortcode))
         conn.commit()
+        
+
+def hideUrl(shortcode: str) -> None:
+    appendMetadata(shortcode, 'hidden', True)
 
 
 # Test the database functions    
 if __name__ == '__main__':
     input('This will purge all data in the database.\nPress Enter to continue...')
     purgeAllData()
-    for i in range(10):
+    for i in range(100):
         print(i)
-        insert_url(f'https://example.com/{i}', f'{i}{i}{i}')
-    
-    appendMetadata('000', 'expires', time.time() + 60) # 60 seconds from now
-    print(get_all_urls()[0].url)
-    print(get_all_urls()[0].shortcode)
-    print(eval(get_all_urls()[0].metadata)['expires'])
+        insert_url(f'https://example.com/{i}', {i})
     # print(eval(get_all_urls()[0].metadata))
     from main import main
     main()

@@ -271,13 +271,6 @@
               </property>
              </spacer>
             </item>
-            <item>
-             <widget class="QLabel" name="usesLeft">
-              <property name="text">
-               <string>{0} uses left for this URL</string>
-              </property>
-             </widget>
-            </item>
            </layout>
           </item>
           <item row="1" column="0">
@@ -395,7 +388,7 @@
        </spacer>
       </item>
       <item row="13" column="1">
-       <widget class="QPushButton" name="CheckURL">
+       <widget class="QPushButton" name="CheckURLBtn">
         <property name="text">
          <string>Check URL</string>
         </property>
@@ -585,25 +578,6 @@
           <property name="topMargin">
            <number>3</number>
           </property>
-          <item>
-           <widget class="QPushButton" name="openInWeb">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>22</height>
-             </size>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>100</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Open in Browser</string>
-            </property>
-           </widget>
-          </item>
           <item>
            <widget class="QPushButton" name="AddButton">
             <property name="minimumSize">

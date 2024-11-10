@@ -4,8 +4,6 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 import threading
 import pyperclip
-import urllib
-import time
 import sys
 
 from init import *
@@ -69,7 +67,9 @@ class window(QMainWindow):
         self.mainUi.deleteBtn.hide()
         self.mainUi.deleteBtn.clicked.connect(self.deleteSelectedUrl)
         self.mainUi.copyLongURL.clicked.connect(lambda: pyperclip.copy(self.mainUi.longurl_edit.text()))
+        self.mainUi.copyLongURL.hide()
         self.mainUi.copyShortURL.clicked.connect(lambda: pyperclip.copy(len(self.mainUi.shorturl_edit.text()) > 0 and  f"localhost:{config['flask_port']}/{self.mainUi.shorturl_edit.text()}" or ""))
+        self.mainUi.copyShortURL.hide()
         self.mainUi.AdvancedSettingsBox.hide()
         self.mainUi.AdvancedSettings.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.AdvancedSettingsBox))
         self.mainUi.expireDate.hide()
@@ -79,8 +79,7 @@ class window(QMainWindow):
         self.mainUi.maxUses.hide()
         self.mainUi.limitURLUsesBtn.clicked.connect(lambda: utils.toggleVisibility(self.mainUi.maxUses))
         self.mainUi.refreshBtn.clicked.connect(self.refreshTable)
-        self.mainUi.openInWeb.hide()
-        self.mainUi.openInWeb.clicked.connect(lambda: utils.openInWeb(self.mainUi.longurl_edit.text()))
+        self.mainUi.CheckURLBtn.clicked.connect(self.checkURL)
         
         # Table actions
         self.mainUi.DataTable.cellClicked.connect(self.cellClicked)
@@ -158,6 +157,7 @@ class window(QMainWindow):
         database.appendMetadata(shortcode, "password", password)
         database.appendMetadata(shortcode, "expires", expireDate)
         database.appendMetadata(shortcode, "maxUses", uses)
+        database.appendMetadata(shortcode, "uses", 0)
         
         self.addUrlToTable(url, shortcode)
         self.clearfields()
@@ -173,18 +173,24 @@ class window(QMainWindow):
         
     # Clear the fields and set the button state to "Add URL"
     def clearfields(self):
-        self.mainUi.clearBtn.setText("Clear")
-        self.mainUi.longurl_edit.setText("")
-        self.mainUi.shorturl_edit.setText("")
-        self.mainUi.shorturl_edit.setPlaceholderText("Shortcode")
-        self.mainUi.AddButton.setText("Add URL")
         self.mainUi.AddButton.disconnect()
         self.mainUi.AddButton.clicked.connect(self.addUrl)
-        self.mainUi.deleteBtn.hide()
-        self.mainUi.passwordBox.setPlaceholderText("Password")
+        
+        self.mainUi.AdvancedSettings.setChecked(False)
+        self.mainUi.AdvancedSettings.show()
+        
+        self.mainUi.clearBtn.setText("Clear")
+        self.mainUi.AddButton.setText("Add URL")
+        self.mainUi.longurl_edit.setText("")
+        self.mainUi.shorturl_edit.setText("")
         self.mainUi.passwordBox.setText("")
+        self.mainUi.urlcheckEdit.setText("")
+        self.mainUi.shorturl_edit.setPlaceholderText("Shortcode")
+        self.mainUi.passwordBox.setPlaceholderText("Password")
+        self.mainUi.deleteBtn.hide()
+        self.mainUi.copyShortURL.hide()
+        self.mainUi.copyLongURL.hide()
         self.mainUi.passwordBox.setReadOnly(False)
-        self.mainUi.openInWeb.hide()
         
     # Check if the user wants to use custom shortcode
     def isCustomShortCode(self) -> bool:
@@ -217,7 +223,9 @@ class window(QMainWindow):
             self.mainUi.passwordBox.setReadOnly(True)
             self.mainUi.passwordBox.setPlaceholderText("You can't change the password")
             self.mainUi.passwordBox.setText("")
-            self.mainUi.openInWeb.show()
+            self.mainUi.copyShortURL.show()
+            self.mainUi.copyLongURL.show()
+            self.mainUi.AdvancedSettings.hide()
             
     
     def deleteSelectedUrl(self):                                                                                                
@@ -240,8 +248,23 @@ class window(QMainWindow):
             
             if metadata['password'] is not None and config['rename_password_protected_urls']:
                 url = "Password protected URL"
+                
+            if "hidden" in metadata.keys() and metadata['hidden'] == True and not config['show_hidden_urls']:
+                continue
             
             self.addUrlToTable(url, i.shortcode)
+            
+    
+    def checkURL(self):
+        search_text = self.mainUi.urlcheckEdit.text()
+        table = self.mainUi.DataTable
+        for row in range(table.rowCount()):
+            item = table.item(row, 0)  # Assuming the short URL is in the first column
+            if item and item.text() == search_text:
+                table.selectRow(row)
+                self.cellClicked()
+                return
+        QMessageBox.information(self, "Search Result", "Short URL not found.")
         
     # Open settings dialog
     def settings(self):
@@ -250,6 +273,7 @@ class window(QMainWindow):
         self.settingsUi.max_short_url_length.setValue(config['max_short_url_length'])
         self.settingsUi.short_url_length.setValue(config['short_url_length'])
         self.settingsUi.renamepasswdurls.setChecked(config['rename_password_protected_urls'])
+        self.settingsUi.showHiddenUrls.setChecked(config['show_hidden_urls'])
         ## Appearance
         self.settingsUi.defaultTheme.setChecked(config['default_theme'])
         ## Database
@@ -268,6 +292,7 @@ class window(QMainWindow):
             config['max_short_url_length'] = self.settingsUi.max_short_url_length.value()
             config['short_url_length'] = self.settingsUi.short_url_length.value()
             config['rename_password_protected_urls'] = self.settingsUi.renamepasswdurls.isChecked()
+            config['show_hidden_urls'] = self.settingsUi.showHiddenUrls.isChecked()
             config['default_theme'] = self.settingsUi.defaultTheme.isChecked()
             config['database']['db_name'] = self.settingsUi.DatabaseName.text()
             config['database']['remote'] = self.settingsUi.remoteDb.isChecked()

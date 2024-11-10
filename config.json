@@ -4,6 +4,7 @@
 	"min_short_url_length": 3,
 	"max_short_url_length": 20,
 	"rename_password_protected_urls": true,
+	"show_hidden_urls": false,
 	"short_url_length": 6,
 	"flask_port": 6969,
 	"flask_debug": true,

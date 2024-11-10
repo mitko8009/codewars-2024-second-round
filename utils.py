@@ -1,12 +1,11 @@
 from PyQt5.QtWidgets import QWidget
-import webbrowser
 import hashlib
 import json
 import time
 import sys
 import os
 
-from init import *
+from init import initConfig
 
 # URLShortcode class to store URL, shortcode and metadata
 class URLShortcode:
@@ -65,15 +64,14 @@ def getFileContents(file: str) -> str:
 def hashPassword(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
-# Open a URL in the default web browser
-def openInWeb(url: str) -> None:
-    if url is None:
-        return
-    
-    if not url.startswith("http"):
-        url = "https://" + url
-        
-    webbrowser.open(url)
+# Route for URL not found
+def URLNotFoundRoute() -> str:
+    return getFileContents(resource_path("./static/error.html")).format(
+        app_title=getFromConfig("title"),
+        css=getFileContents(resource_path("./static/style.css")),
+        title="URL not found<br>404",
+        content="This URL does not exist."
+    )
 
 if __name__ == "__main__":
     from main import main
