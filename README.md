@@ -79,7 +79,7 @@ Check the `Set max uses` box and enter a value.
 
 Set an expiration date by checking the `Expire Date` box.
 
-### 📝 Updateing existing URL
+### 📝 Updating existing URL
 
 You can update an existing one by clicking on it in the URL table or typing the short code of the url in the `Check URL` field at the bottom of the window. Change the fields to the new information and click `Update URL`.
 
